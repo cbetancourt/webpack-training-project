@@ -19,7 +19,7 @@ const webpack = require("webpack");
 const isProduction = process.env.NODE_ENV === 'production';
 
 console.log(
-	`Running webpack in the ${isProduction ? 'production' : 'development'} mode`,
+	`Running webpack in ${isProduction ? 'production' : 'development'} mode`,
 );
 
 module.exports = {
