@@ -15,17 +15,19 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const webpack = require("webpack");
+const CleanWebpackPlugin = require("clean-webpack-plugin")
 
-const isProduction = process.env.NODE_ENV === 'production';
+const PRODUCTION_MODE = process.env.NODE_ENV === 'production';
+const BUILD_PATH = path.resolve(__dirname, 'public', 'build');
 
 console.log(
-	`Running webpack in ${isProduction ? 'production' : 'development'} mode`,
+	`Running webpack in ${PRODUCTION_MODE ? 'production' : 'development'} mode`,
 );
 
 module.exports = {
 	entry: './src/index.js',
 	output: {
-		path: path.resolve(__dirname, 'public', 'build'),
+		path: BUILD_PATH,
 		filename: 'bundle.js',
 		publicPath: '/build/',
 	},
@@ -70,8 +72,11 @@ module.exports = {
 			}
 		],
 	},
-	devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
+	devtool: PRODUCTION_MODE ? 'source-map' : 'cheap-module-source-map',
 	plugins: [
+		new CleanWebpackPlugin([
+			BUILD_PATH
+		]),
 		// Emit HTML files that serve the app
 		new HtmlWebpackPlugin({
 			template: 'src/templates/landing.html',
@@ -84,7 +89,7 @@ module.exports = {
 			alwaysWriteToDisk: true,
 		}),
 	].concat(
-		isProduction
+		PRODUCTION_MODE
 			? [
 				new webpack.EnvironmentPlugin({
 					NODE_ENV: "production"
